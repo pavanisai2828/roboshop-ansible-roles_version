@@ -11,6 +11,10 @@
   ansible.builtin.import_role:
     name: common
     tasks_from: systemd-setup.yaml
+- name: npm install
+  ansible.builtin.import_role:
+    name: common
+    tasks_from: npm-setup.yaml
 - name: copy mongo.repo 
   ansible.builtin.copy:
     src: mong.repo

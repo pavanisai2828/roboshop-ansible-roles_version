@@ -8,6 +8,11 @@
     name: common
     tasks_from: app-setup.yaml
 
+- name: npm install
+  ansible.builtin.import_role:
+    name: common
+    tasks_from: npm-setup.yaml
+
 - name: create systemd service
   ansible.builtin.import_role:
     name: common
