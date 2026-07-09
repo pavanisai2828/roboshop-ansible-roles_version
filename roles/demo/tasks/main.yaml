@@ -1,3 +1,9 @@
 - name: demo role
   debug:
     msg: " Hi this is from demo role"
+## this should load another role common
+- name: import common role
+  ansible.builtin.import_role:
+    name: common
+    ansible.builtin.tasks_from: hello.yaml
+
