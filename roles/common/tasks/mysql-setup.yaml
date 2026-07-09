@@ -3,8 +3,8 @@
     state: import
     name: all
     login_host: "{{ MYSQL_HOST }}"
-    login_user: my_sql_user_login
-    login_password: my_sql_user_password
+    login_user: "{{ my_sql_user_login }}"
+    login_password: "{{ my_sql_user_password }}"
     target: "{{ item }}"
   loop:
   - /app/db/schema.sql
