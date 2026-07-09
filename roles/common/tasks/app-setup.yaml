@@ -12,7 +12,7 @@
 
 - name: delete "{{ component }}".zip in tmp directory
   ansible.builtin.file:
-    path: /tmp/"{{ component }}".zip
+    path: "/tmp/{{ component }}.zip"
     state: absent
 
 - name: crete /app directory
@@ -22,7 +22,7 @@
 
 - name: download "{{ component }}".zip file
   ansible.builtin.get_url:
-    url: https://roboshop-artifacts.s3.amazonaws.com/"{{ component }}"-v3.zip
+    url: "https://roboshop-artifacts.s3.amazonaws.com/{{ component }}-v3.zip"
     dest: /tmp/"{{ component }}".zip
 
 
