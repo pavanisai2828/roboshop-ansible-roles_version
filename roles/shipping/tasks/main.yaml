@@ -1,6 +1,6 @@
 - name: maven setup
   ansible.builtin.import_role:
-    name: maven
+    name: common
     tasks_from: maven-setup.yaml
 
 - name: application setup
