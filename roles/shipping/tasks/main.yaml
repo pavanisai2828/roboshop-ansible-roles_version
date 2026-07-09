@@ -8,6 +8,11 @@
     name: common
     tasks_from: app-setup.yaml
 
+- name: download dependencies
+  ansible.builtin.command: mvn clean package
+  args:
+    chdir: /app
+
 - name: move shipping.jar
   ansible.builtin.command: mv target/shipping-1.0.jar shipping.jar
   args:
