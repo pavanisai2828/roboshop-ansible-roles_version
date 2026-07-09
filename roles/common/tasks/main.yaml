@@ -1,0 +1,5 @@
+- name: this is from common tasks
+  debug:
+    msg: this is from common taks execution
+  roles:
+  - demo
