@@ -5,5 +5,5 @@
 - name: import common role
   ansible.builtin.import_role:
     name: common
-    ansible.builtin.tasks_from: hello.yaml
+    tasks_from: hello.yaml
 
