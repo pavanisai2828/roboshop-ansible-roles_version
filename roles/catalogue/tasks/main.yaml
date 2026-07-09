@@ -1,48 +1,16 @@
-- name: disbale nodejs
-  ansible.builtin.command:
-    cmd: dnf module disable nodejs -y
-- name: enable nodejs
-  ansible.builtin.command:
-    cmd: dnf module enable nodejs:20 -y
-- name: install nodejs
-  ansible.builtin.package:
-    name: nodejs
-    state: present
-- name: configure the application by cretaing system user
-  ansible.builtin.user:
-    name: roboshop
-    system: True
-    home: /app
-    shell: /sbin/nologin
-    comment: roboshop system user
-- name: remove /app directory
-  ansible.builtin.file:
-    path: /app
-    state: absent
-- name: delete catalogue.zip in tmp directory
-  ansible.builtin.file:
-    path: /tmp/catalogue.zip
-    state: absent
-- name: crete /app directory
-  ansible.builtin.file:
-    path: /app
-    state: directory
-- name: download catalogue.zip file
-  ansible.builtin.get_url:
-    url: https://roboshop-artifacts.s3.amazonaws.com/catalogue-v3.zip
-    dest: /tmp/catalogue.zip
-- name: unzip catalogue.zip
-  ansible.builtin.unarchive:
-    src: /tmp/catalogue.zip
-    dest: /app
-    remote_src: yes 
-- name: install dependencies
-  community.general.npm:
-    path: /app
-- name: setup catalogue.service
-  ansible.builtin.template:
-    src: catalogue.service.j2
-    dest: /etc/systemd/system/catalogue.service
+- name: application setup
+  ansible.builtin.import_role:
+    name: common
+    tasks_from: nodejs.yaml
+
+- name: configure application
+  ansible.builtin.import_role:
+    name: common
+    tasks_from: app-setup.yaml
+- name: systemd setup
+  ansible.builtin.import_role:
+    name: common
+    tasks_from: systemd_service
 - name: copy mongo.repo 
   ansible.builtin.copy:
     src: mong.repo
@@ -56,21 +24,18 @@
 - name: check catalogue schema exists or not
   ansible.builtin.shell: mongosh --host "{{ MONGODB_HOST }}" --eval 'db.getMongo().getDBNames().indexOf("catalogue")'
   register: catalogue_output
-  tags:
-  - mongodb
-- name: print catalogue_output
-  debug:
-    msg: "{{ catalogue_output }}"
-  tags:
-  - mongodb
+#   tags:
+#   - mongodb
+# - name: print catalogue_output
+#   debug:
+#     msg: "{{ catalogue_output }}"
+#   tags:
+#   - mongodb
 - name: load master data
   ansible.builtin.shell: mongosh --host "{{ MONGODB_HOST }}" </app/db/master-data.js
   when: catalogue_output.stdout | int < 0
-  tags:
-  - mongodb
-- name: deamon reload
-  ansible.builtin.systemd_service:
-    daemon_reload: True
+  # tags:
+  # - mongodb
 - name: enable and start catalogue
   ansible.builtin.service:
     name: catalogue
