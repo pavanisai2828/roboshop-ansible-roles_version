@@ -10,7 +10,7 @@
 - name: systemd setup
   ansible.builtin.import_role:
     name: common
-    tasks_from: systemd_service
+    tasks_from: systemd-service
 - name: copy mongo.repo 
   ansible.builtin.copy:
     src: mong.repo
