@@ -12,6 +12,11 @@
   ansible.builtin.import_role:
     name: common
     tasks_from: systemd-setup.yaml
+  
+- name: npm install
+  ansible.builtin.import_role:
+    name: common
+    tasks_from: npm-setup.yaml
 
 - name: move shipping.jar
   ansible.builtin.command: mv target/shipping-1.0.jar shipping.jar
