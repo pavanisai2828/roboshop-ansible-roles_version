@@ -1,0 +1,37 @@
+- name: install python3
+  ansible.builtin.package:
+    name: "{{ item }}"
+    state: present
+  loop:
+  - python3
+  - gcc
+  - python3-devel
+
+- name: application setup
+  ansible.builtin.import_role:
+    name: common
+    tasks_from: app-setup.yaml
+
+- name: download dependencies
+  ansible.builtin.pip:
+    requirements: requirements.txt
+    executable: pip3.9
+  args:
+    chdir: /app
+
+- name: system service setup
+  ansible.builtin.import_role:
+    name: common
+    tasks_from: systemd-setup.yaml
+
+- name: enable and start shipping
+  ansible.builtin.service:
+    name: payment
+    state: restarted
+    enabled: yes
+
+- name: enable and start shipping
+  ansible.builtin.service:
+    name: shipping
+    state: restarted
+    enabled: yes
